@@ -1,13 +1,9 @@
 import Link from "next/link";
-import { client } from "@/sanity/lib/client";
+import { sanityFetch } from "@/sanity/lib/live";
 import { POSTS_QUERY } from "@/sanity/lib/queries";
 
-// Revalidates content after every 60 seconds
-const options = { next: { revalidate: 60 } };
-
-// DO NOT fetch content like this, there's a better alternative that integrates well with nextjs cache (SanityLive)
 export default async function Page() {
-  const posts = await client.fetch(POSTS_QUERY, {}, options);
+  const { data: posts } = await sanityFetch({ query: POSTS_QUERY });
 
   return (
     <main className="container mx-auto grid grid-cols-1 gap-6 p-12">
