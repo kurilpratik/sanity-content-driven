@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Content Driven Web Application Foundations by Sanity
 
-## Getting Started
+Follow the [course](https://www.sanity.io/learn/course/content-driven-web-application-foundations)
 
-First, run the development server:
+## Managing Types
+
+Run the following command:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npx sanity@latest schema extract --path=./src/sanity/extract.json
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<br>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create a new file at the root of your project: _sanity-typegen.json_
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+{
+  "path": "./src/**/*.{ts,tsx,js,jsx}",
+  "schema": "./src/sanity/extract.json",
+  "generates": "./src/sanity/types.ts"
+}
+```
 
-## Learn More
+<br>
+Run the following command:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npx sanity@latest typegen generate
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The extract.json file will need to be updated every time you update your Sanity Studio schema types and TypeGen every time you do or update your GROQ queries.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Instead of doing these steps separately, you can include scripts in your package.json file to make running these automatic and more convenient.
 
-## Deploy on Vercel
+Update _package.json_ scripts:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+"scripts": {
+  // ...all your other scripts
+  "predev": "npm run typegen",
+  "prebuild": "npm run typegen",
+  "typegen": "sanity schema extract --path=./src/sanity/extract.json && sanity typegen generate"
+},
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+_You can now run both the schema extraction and TypeGen commands with one line:_
+
+```bash
+npm run typegen
+```
