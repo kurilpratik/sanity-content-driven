@@ -7,7 +7,7 @@ export const POSTS_QUERY = defineQuery(`
 `);
 
 export const POST_QUERY = defineQuery(`
-    *[_type == "post" && defined(slug.current)]
+    *[_type == "post" && slug.current == $slug]
     [0]
-    {title, boyd, mainImage}
+    {title, body, mainImage}
 `);
